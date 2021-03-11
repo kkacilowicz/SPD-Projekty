@@ -4,7 +4,7 @@
 
 import csv
 
-file = open("JACK2.DAT", "r")
+file = open("JACK1.DAT", "r")
 
 n = 0
 r = []
@@ -23,18 +23,19 @@ print("r: ", r)
 print("p: ", p)
 
 C = [int(r[0])+int(p[0])]
+tuple = (int(r[0]),  C[0])
+list = []
+list.append(tuple)
 
 for i in range(1, int(n)):
-   C.append(max(int(r[i]), C[i-1])+int(p[i]))
+    C.append(max(int(r[i]), C[i-1]) + int(p[i]))
+    tuple = (int(r[i]), C[i])
+    list.append(tuple)
 
-print(C)
+print("C:", C)
+print("Lista: ", list)
+list.sort()
+print("Lista: ", list)
+Cmax = list[int(n)-1][1]
+print("Cmax ", Cmax)
 
-
-r.sort()
-print("r:", r)
-C.clear()
-C = [int(r[0])+int(p[0])]
-for i in range(1, int(n)):
-   C.append(max(int(r[i]), C[i-1])+int(p[i]))
-
-print(C)
