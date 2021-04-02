@@ -30,29 +30,36 @@ print(r)
 print(p)
 print(q)
 
-"""
+
 t = 0
 k = 0
 Cmax = 0
-G = {} # pusty zbior G
-N = {1}
+G = []
+N = []
+
 for i in range(1, int(n)+1):
-    N.add(i)  # tworzenie zbioru N
+    N.append(i)
+
+print("N:", N)
+
 
 while len(G) != 0 or len(N) != 0:  # dopoki zbior G lub N nie sa puste
-   while len(N) != 0  and min(r) <= t:
+    print("jestem w algorytmie")
+    while len(N) != 0 and min(r) <= t:
         e = min(r) # e to najmniejszy element r
-        G = G | set(e)  # | to suma
-        N = N - set(e)  # - zwraca roznice zbiorow
-   if len(G) == 0:
+        if G.count(e) == 0:
+            G.append(e)  # tu taka ala suma zbioru
+        if N.count(e) != 0:
+            N.remove(e) # tu różnica zbioru
+    if len(G) == 0:
        t = min(r)
        continue
-   e = max(q)
-   G = G - e
-   k=k+1
-   t = t + p
-   Cmax = max(Cmax, t + q)
+    e = max(q)
+    G.remove(e)
+    k = k + 1
+    t = t + p
+    Cmax = max(Cmax, t + q)
 
+print("poszło po ")
 print(Cmax)
 
-"""
