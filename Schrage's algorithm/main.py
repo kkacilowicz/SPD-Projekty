@@ -1,6 +1,6 @@
 # Name: Schrage's algorithm program
 # Authors: Kacper Kaciłowicz 248951, Weronika Jakubowska 248931
-# Date: 07.04.2021
+# Date: 09.04.2021
 
 import csv
 import heapq
@@ -13,15 +13,15 @@ class Task:
         # r - time of accessibility
         # p - time of execution
         # q - time of deliver the task
-        self.r = r
-        self.p = p
-        self.q = q
+        self.r = int(r)
+        self.p = int(p)
+        self.q = int(q)
 
     # This is a definition used in printing an object
     def __str__(self):
         return "r: %d p: %d q: %d" % (self.r, self.p, self.q)
 
-
+# Class for unordered tasks - they are sorted differently than the ordered ones
 class NsetTask(Task):
     def __init__(self, r, p, q):
         super().__init__(r, p, q)
@@ -32,7 +32,7 @@ class NsetTask(Task):
         other_r = other.r
         return self_r < other_r
 
-
+# Class for unordered tasks - they are sorted differently than the ordered ones
 class GsetTask(Task):
     def __init__(self, othertask):
         super().__init__(othertask.r, othertask.p, othertask.q)
@@ -46,12 +46,11 @@ class GsetTask(Task):
 
 # n - nb of tasks
 n = 0
-
-
-# It's a list for unordered tasks
+# It's a list for unordered tasks (not ready to be executed)
 NSet = []
 
-file = open("SCHRAGE1.DAT", "r")
+# Reeading from file and storing data in the list of NsetTasks
+file = open("SCHRAGE5.DAT", "r")
 
 if file.readable():
     n = file.readline()
@@ -61,46 +60,47 @@ if file.readable():
         NSet.append(NsetTask(row[0], row[1], row[2]))
     file.close()
 
-for obj in NSet:
-    print(obj.r, obj.p, obj.q)
-
-print("sortowanie")
+# Tasks are sorted in ascending order (With ascending value of NsetTask obj.r)
 NSet.sort()
 
-
-for obj in NSet:
-    print(obj.r, obj.p, obj.q)
-
-
-# Do GSet będę chciał używać heapq itd, do Nset nie jest potrzebny
-
+# Variables initialized (t - actual moment in time, Cmax - Max time of delivery,
 t = 0
-k = 0
 Cmax = 0
-G = []
-N = []
-#
-# for i in range(1, int(n) + 1):
-#     N.append(i)
-#
-# print("N:", N)
-#
-# while len(G) != 0 or len(N) != 0:  # dopoki zbior G lub N nie sa puste
-#     print("jestem w algorytmie")
-#     while len(N) != 0 and min(r) <= t:
-#         e = min(r)  # e to najmniejszy element r
-#         if G.count(e) == 0:
-#             G.append(e)  # tu taka ala suma zbioru
-#         if N.count(e) != 0:
-#             N.remove(e)  # tu różnica zbioru
-#     if len(G) == 0:
-#         t = min(r)
-#         continue
-#     e = max(q)
-#     G.remove(e)
-#     k = k + 1
-#     t = t + p
-#     Cmax = max(Cmax, t + q)
-#
-# print("poszło po ")
-# print(Cmax)
+
+# It's a list of tasks ready to be executed
+# It stores GsetTask objects which are sorted in descending order (With descending value of obj.q)
+GSet = []
+
+# It's a list of tasks which represents the order of execution
+Harmonogram = []
+
+# While lists are not empty
+while len(NSet) != 0 or len(GSet) != 0:
+    # While smallest time of accessibility is smaller than actual moment in time (and Nset is not empty)
+    while len(NSet) != 0 and min(NSet).r <= t:
+        # Task with smallest r is removed from NSet and added to variable e
+        # heapq library makes a list behave like a heap, where Nset is a min-heap, Gset is a max-heap
+        e = heapq.heappop(NSet)
+        # e is appended to list, from now on NsetTask became GsetTask
+        GSet.append(GsetTask(e))
+        # Apparently you always have to heapify (make heap out of list) when you have populated list
+        # Otherwise algorithm doesn't work
+        heapq._heapify_max(GSet)
+
+    # In a situation where Gset is empty, t = smallest r in Nset
+    if len(GSet) == 0:
+        t = min(NSet).r
+    else:
+        # e = GsetTask with highest q
+        e = heapq._heappop_max(GSet)
+        # Saving order of execution
+        Harmonogram.append(e)
+        # Actual moment in time = Previous moment in time + time of execution of this task
+        t = t + e.p
+        # Max time of delivery = Hiqhest of old Cmax vs actual time + time of delivery
+        Cmax = max(Cmax, t + e.q)
+
+print("Cmax: ", Cmax)
+
+
+
