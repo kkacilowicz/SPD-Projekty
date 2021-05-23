@@ -32,8 +32,12 @@ def PositionC(A, B, list):
 
 def blok (list, Cmax):
      B = PositionB(list, Cmax)
-     A = PositionA(list, Cmax, B)
-     C = PositionC(A, B, list)
+     if B == -1 :
+          A = -1
+          C = -1
+     else:
+          A = PositionA(list, Cmax, B)
+          C = PositionC(A, B, list)
      return A, B, C
 
 
