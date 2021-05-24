@@ -11,6 +11,7 @@ class Task:
         self.C = 0
 
 
+
     # This is a definition used in printing an object
     def __str__(self):
         return "r: %d p: %d q: %d C: %d" % (self.r, self.p, self.q, self.C)
@@ -25,6 +26,8 @@ class NsetTask(Task):
         self_r = self.r
         other_r = other.r
         return self_r < other_r
+
+
 
 # Class for unordered tasks - they are sorted differently than the ordered ones
 class GsetTask(Task):

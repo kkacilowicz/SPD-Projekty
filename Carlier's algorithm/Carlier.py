@@ -12,53 +12,61 @@ import math
 Nset=[]
 filename = "SCHRAGE3.DAT"
 [Nset, n] = readFile.readFile(filename)
+
 UB = math.inf
-# Harmonogram = []
-# [Harmonogram, U] = schrage.Schrage(Nset)
+
 
 def Calier(Nset, UB):
     NSetD = copy.deepcopy(Nset)
-    NSetD2 = copy.deepcopy(Nset)
     NSet = copy.deepcopy(Nset)
-    NSet1 = copy.deepcopy(Nset)
     [Harmonogram, U] = schrage.Schrage(Nset)
-    print("Wchodze ->   U : " + str(U) + " harmonogram : ")
-    for i in Harmonogram:
-        print(i)
-    print("UB", UB)
+    print("Nowe wywołanie U: ", U, " UB ", UB)
     if U < UB:
         UB = U
-        print("UB", UB)
+        # print("UB", UB, "U", U)
         opty_harmonogram = Harmonogram
-        print("U", U)
     [a, b, c] = blok.blok(Harmonogram, U)
     if c == -1:
-        print("U w c == -1", U)
+        print("C == -1")
+        print("U", U, "UB", UB)
         return 0
     else:
-        # print("Harmonogram:")
-        # for i in Harmonogram:
-        #     print(i)
-        print("a ", a," b ", b," c ", c)
+
+        # print("a ", a," b ", b," c ", c)
 
         r = min(Harmonogram[c+1:b+1]).r
         q = min(Harmonogram[c+1:b+1]).q
-        print("r", r)
-        print("q", q)
         p = 0
         for i in range(c+1, b+1):
             p = p + Harmonogram[i].p
-        print("p", p)
+
+        # print("r", r, "q", q, "p", p)
+
         Harmonogram_c_r = copy.copy(Harmonogram[c].r)
         Harmonogram[c].r = max(Harmonogram[c].r, r + p)
 
+
+        for i in range(0, int(n)):
+            if NSetD[i].p == Harmonogram[c].p and NSetD[i].q == Harmonogram[c].q:
+                NSetD[i].r = max(Harmonogram[c].r, r + p)
+        NSetD2 = copy.deepcopy(NSetD)
         LB = schrageDistribution.SchrageWithDistributuion(NSetD)
+        print("Dla R: LB: ", LB, "UB: ", UB)
+
         if LB < UB:
             Calier(NSetD2, UB)
+        print("H", Harmonogram_c_r)
         Harmonogram[c].r = Harmonogram_c_r
 
         Harmonogram_c_q = copy.copy(Harmonogram[c].q)
         Harmonogram[c].q = max(Harmonogram[c].q, q + p)
+
+        for i in range(0, int(n)):
+            if NSet[i].p == Harmonogram[c].p and NSet[i].r == Harmonogram[c].r:
+                NSet[i].r = max(Harmonogram[c].r, r + p)
+
+        NSet1 = copy.deepcopy(NSet)
+        # print("Dla q: LB: ", LB, "UB: ", UB)
 
         LB = schrageDistribution.SchrageWithDistributuion(NSet)
         if LB < UB:
@@ -66,7 +74,7 @@ def Calier(Nset, UB):
         Harmonogram[c].q = Harmonogram_c_q
 
 
-Calier(Nset, 1299)
+Calier(Nset, UB)
 
 
 
