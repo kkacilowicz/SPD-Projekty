@@ -29,9 +29,7 @@ def Calier(Nset):
         return opty_harmonogram, UB
 
     else:
-        if c + 1 >= len(opty_harmonogram): # if task c is the last one, r p q doesn't exist
-            return None
-        elif c + 1 == b:  # one element between c and b
+        if c + 1 == b:  # one element between c and b
             r = Harmonogram[c + 1].r
             q = Harmonogram[c + 1].q
             p = Harmonogram[c + 1].p

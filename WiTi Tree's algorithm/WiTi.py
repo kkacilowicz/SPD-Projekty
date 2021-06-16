@@ -4,6 +4,7 @@ from Task import Task, punishment
 
 
 def WiTi(tasks):
+
     # Number of OptimalPunishments is 2^n, where n is number of tasks
     # pow(2, len(task)) f. ex. if theres 3 tasks looks like that 00001000
     NumberOfCombinations = pow(2, len(tasks))
@@ -18,7 +19,6 @@ def WiTi(tasks):
 
     # for each combination
     for i in range(1, NumberOfCombinations):
-
         # End of execution time of that task
         EndOfExecution = 0
         # Just a big value so as the algorithm works fine
@@ -28,7 +28,7 @@ def WiTi(tasks):
         for j in range(0, len(tasks)):
             # If task is within this combination
             # Exactly, check if j bit within i is set
-            # f ex if is 00001010 then it is true for j = 1 and j=3
+            # f ex if is 00001010 then it is true
             if i & (1 << j):
                 # Add time of execution to Cmax
                 EndOfExecution += tasks[j].p
